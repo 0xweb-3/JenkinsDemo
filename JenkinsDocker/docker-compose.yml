@@ -1,17 +1,17 @@
 services:
   jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
+    build:
+      context: .         # Dockerfile 所在目录
+      dockerfile: Dockerfile
+    container_name: jenkinsDocker
     ports:
-      - "8081:8080"        # 映射 Jenkins Web 访问端口
-      - "50001:50000"      # 映射代理节点通信端口
+      - "8090:8080"        # 映射 Jenkins Web 访问端口
+      - "50011:50000"      # 映射代理节点通信端口
     environment:
       JAVA_OPTS: "-Djava.awt.headless=true"  # 配置 Java 参数
     volumes:
       - jenkins_data:/var/jenkins_home       # 数据存储持久化
       - /etc/localtime:/etc/localtime:ro    # 保持容器时间与主机同步
-#      - /var/run/docker.sock:/var/run/docker.sock # 挂载 Docker 的 socket 文件
-#      - /usr/bin/docker:/usr/bin/docker           # 挂载 Docker CLI 二进制文件
     networks:
       - jenkins_network
     restart: unless-stopped                 # 配置容器异常退出后自动重启
